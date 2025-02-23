@@ -4,8 +4,6 @@ from os import close
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from numpy.ma.core import empty
-
 from mybot.loader import dp, db_manager, bot
 from keyboard.phone_share import phone_number_share
 from keyboard.user_keyboard import user_menu, choose_line, orders_menu, get_known
