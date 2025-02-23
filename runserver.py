@@ -8,7 +8,7 @@ import asyncio
 
 BOT_TOKEN = "7856380433:AAGvb5ELa6v6EJGrpubNW5UemRXFkz11kPw"
 
-BOT_ID = None
+BOT_ID = 7856380433
 
 bot: Bot = Bot(token=BOT_TOKEN)
 

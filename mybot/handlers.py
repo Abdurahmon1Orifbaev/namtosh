@@ -100,6 +100,17 @@ Odam soni: {data.get("members")}
     await message.answer(text=confirmation_text, reply_markup=user_menu)
     await state.finish()
 
+
+@dp.message_handler(
+    lambda message: (
+        message.reply_to_message and message.chat.id == GROUP_CHAT_ID and message.reply_to_message.from_user.id == message.from_user.id
+    ),
+    content_types=[types.ContentType.VOICE, types.ContentType.AUDIO]  # Voice or audio messages
+)
+async def nothing(message: types.Message):
+    pass
+
+
 @dp.message_handler(
     lambda message: (
         message.reply_to_message is not None  # Ensure it's a reply # Check if it's replying to the bot
