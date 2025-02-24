@@ -21,17 +21,7 @@ async def on_startup(_, dispatcher = None):
     db_manager.create_orders_table()
     db_manager.create_users_table()
 
-    global BOT_ID
-    me = await bot.get_me()
-    BOT_ID = me.id
-    print(f"Bot is running... My ID is {BOT_ID}")
 
-@dp.message_handler(lambda msg: msg.text == "check_id")
-async def check_bot_id(message: types.Message):
-    if BOT_ID:
-        await message.reply(f"My ID is {BOT_ID}")
-    else:
-        await message.reply("Bot ID not set yet.")
 
 
 if __name__ == "__main__":

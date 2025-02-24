@@ -1,0 +1,23 @@
+# Ignore virtual environments
+.venv/
+venv/
+
+# Byte-compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+.env
+
+# Databases
+*.db
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE configurations (optional)
+.idea/
+.vscode/

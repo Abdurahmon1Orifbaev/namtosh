@@ -1,13 +1,8 @@
-from asyncore import close_all
-from distutils.command.clean import clean
-from os import close
-
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from mybot.loader import dp, db_manager, bot
 from keyboard.phone_share import phone_number_share
 from keyboard.user_keyboard import user_menu, choose_line, orders_menu, get_known
-from runserver import BOT_ID
 from state.user_order_state import Register
 
 GROUP_CHAT_ID = -1002457389396
@@ -100,21 +95,10 @@ Odam soni: {data.get("members")}
     await message.answer(text=confirmation_text, reply_markup=user_menu)
     await state.finish()
 
-
 @dp.message_handler(
     lambda message: (
-        message.reply_to_message and message.chat.id == GROUP_CHAT_ID and message.reply_to_message.from_user.id == message.from_user.id
-    ),
-    content_types=[types.ContentType.VOICE, types.ContentType.AUDIO]  # Voice or audio messages
-)
-async def nothing(message: types.Message):
-    pass
-
-
-@dp.message_handler(
-    lambda message: (
-        message.reply_to_message is not None  # Ensure it's a reply # Check if it's replying to the bot
-        and message.chat.id == GROUP_CHAT_ID  # Ensure it's in the specific group chat
+        message.reply_to_message is not None
+        and message.chat.id == GROUP_CHAT_ID
     ),
     content_types=[types.ContentType.VOICE, types.ContentType.AUDIO]  # Voice or audio messages
 )
@@ -128,8 +112,8 @@ async def send_full_info_in_pm_voice(message: types.Message):
             await message.reply("✅ To'liq ma'lumot shaxsiy xabarga yuborildi.")
         except Exception as e:
             await message.reply(f"❌ Xatolik yuz berdi: {e}")
-    else:
-        await message.reply("❌ Ushbu buyurtmaga allaqachon javob berilgan.")
+
+
 
 
 @dp.message_handler(lambda message: message.reply_to_message and message.chat.id == GROUP_CHAT_ID)
