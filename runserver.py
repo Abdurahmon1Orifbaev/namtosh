@@ -17,6 +17,7 @@ async def on_startup(dispatcher: Dispatcher):
     try:
         db_manager.create_users_table()
         db_manager.create_orders_table()
+        db_manager.create_pochta_table()
         logging.info("✅ Database tables created successfully.")
     except Exception as e:
         logging.error(f"❌ Database setup error: {e}")

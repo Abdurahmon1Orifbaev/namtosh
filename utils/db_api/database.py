@@ -23,6 +23,18 @@ class DatabaseManager:
         """)
         self.conn.commit()
 
+    def create_pochta_table(self):
+        self.cursor.execute("""
+        CREATE TABLE IF  NOT EXISTS pochta(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            telegram_id INTEGER,
+            line TEXT,
+            phone_number TEXT,
+            information TEXT
+        )
+        """)
+        self.conn.commit()
+
     def create_orders_table(self):
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS orders (
@@ -70,6 +82,23 @@ class DatabaseManager:
                 INSERT INTO users (telegram_id, line, time, phone_number, members)
                 VALUES (?, ?, ?, ?, ?)
             """, (user_id, line, time, phone_number, members))
+            self.conn.commit()
+            return True
+        except Exception as exc:
+            print(exc)
+            return False
+
+    def append_pochta(self, data):
+        user_id = data.get("user_id")
+        line = data.get("line")
+        phone_number = data.get("phone_number")
+        info = data.get("information")
+
+        try:
+            self.cursor.execute("""
+               INSERT INTO pochta (telegram_id, line, phone_number, information)
+               VALUES (?, ?, ?, ?)
+               """, (user_id, line, phone_number, info))
             self.conn.commit()
             return True
         except Exception as exc:

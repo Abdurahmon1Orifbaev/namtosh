@@ -7,6 +7,7 @@ user_menu = ReplyKeyboardMarkup(
             KeyboardButton(text="Yo`lovchi 👨‍🦳"),
         ],
         [
+            KeyboardButton(text="Pochta 📦"),
             KeyboardButton(text="Ma`lumot 📰")
         ]
     ],resize_keyboard=True

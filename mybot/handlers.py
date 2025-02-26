@@ -1,10 +1,11 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from mybot.loader import dp, db_manager, bot
-from keyboard.phone_share import phone_number_share
+from keyboard.phone_share import phone_number_share, phone_number_share_pochta
 from keyboard.user_keyboard import user_menu, choose_line, orders_menu, get_known
+from keyboard.user_pochta import choose_line_pochta
 from state.user_order_state import Register
-
+from state.user_pochta_state import PochtaRegister
 GROUP_CHAT_ID = -1002457389396
 
 @dp.message_handler(commands=['start', 'help'])
@@ -27,6 +28,60 @@ Admin 👤: @Namtosh7787
 Admin(2) 👤: @azamov935
     """
     await message.answer(text)
+
+@dp.message_handler(text="Pochta 📦", state="*")
+async def pochta_handler(message: types.Message, state: FSMContext):
+    await message.answer("Yo`nalishni tanlang", reply_markup=choose_line_pochta)
+    await PochtaRegister.line.set()
+
+@dp.message_handler(state=PochtaRegister.line)
+async def choosing_line_pochta_handler(message: types.Message, state: FSMContext):
+    await state.update_data({"line": message.text})
+    text = "Iltimos telefon raqamingizni kiriting."
+    await message.answer(text, reply_markup=phone_number_share_pochta)
+    await PochtaRegister.phone_number.set()
+
+@dp.message_handler(state=PochtaRegister.phone_number, content_types=types.ContentType.CONTACT)
+async def choosing_phone_number_handler(message: types.Message, state: FSMContext):
+    await state.update_data({
+        "phone_number": message.contact.phone_number,
+        "user_id": message.chat.id
+    })
+    text = "Pochta haqida malumot kiriting"
+    await message.answer(text)
+    await PochtaRegister.information.set()
+
+@dp.message_handler(state=PochtaRegister.information)
+async def information_handler(message: types.Message, state: FSMContext):
+    await state.update_data({"information": message.text})
+    datas = await state.get_data()
+
+    text_hidden = f"""
+Pochta haqida malumot
+Yo`nalish: {datas.get("line")}
+Telefon raqam: ❌ Maxfiy
+Information: {datas.get("information")}
+
+    """
+    text_full = f"""
+Pochta haqida malumot
+Yo`nalish: {datas.get("line")}
+Telefon raqam: {datas.get("phone_number")}
+Information: {datas.get("information")}
+    """
+
+    await message.answer(text=text_full)
+
+    sent_msg = await bot.send_message(chat_id=GROUP_CHAT_ID, text=text_hidden)
+    order_cache[sent_msg.message_id] = text_full
+
+    confirmation_text = (
+        "Sizning zakazingiz muvofiqiyatli bo`ldi. Haydovchilar yozishini kuting ✅"
+        if db_manager.append_pochta(datas)
+        else "Botda muammo mavjud, biz bilan bog'laning"
+    )
+    await message.answer(text=confirmation_text, reply_markup=user_menu)
+    await state.finish()
 
 @dp.message_handler(text="Yo`lovchi 👨‍🦳", state="*")
 async def send_orders(message: types.Message, state: FSMContext):
