@@ -59,7 +59,7 @@ async def information_handler(message: types.Message, state: FSMContext):
     text_hidden = f"""
 Pochta haqida malumot
 Yo`nalish: {datas.get("line")}
-Telefon raqam: ❌ Maxfiy
+Telefon raqam: ❌ Maxfiy raqam
 Information: {datas.get("information")}
 
     """
